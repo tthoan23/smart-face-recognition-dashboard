@@ -18,7 +18,7 @@ export default function PersonsView() {
     const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
     useEffect(() => {
-        fetch("${API_URL}/api/persons")
+        fetch(`${API_URL}/api/persons`)
             .then(res => res.json())
             .then(data => setPersons(data))
             .catch(err => console.error("Lỗi lấy danh sách người quen", err));
@@ -36,12 +36,12 @@ export default function PersonsView() {
         if (!formName.trim()) return
 
         try {
-            const response = await fetch("${API_URL}/api/persons", {
+            const response = await fetch(`${API_URL}/api/persons`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     name: formName.trim(),
-                    image: formImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&auto=format",
+                    imagePath: formImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&auto=format",
                     faceVector: "[]" // Fake data tạm cho faceVector
                 })
             });
