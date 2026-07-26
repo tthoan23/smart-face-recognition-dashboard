@@ -1,24 +1,23 @@
-// src/pages/LogsView.tsx
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LogEntry, EventType } from "../types";
 import { Icon } from "../components/Icons";
 import { EventBadge, Pagination } from "../components/UI";
 
 interface LogsViewProps {
-    logs: LogEntry[];
+    logs?: LogEntry[];
     onDeleteLog?: (id: number) => void;
 }
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
-export default function LogsView({ logs, onDeleteLog }: LogsViewProps) {
+export default function LogsView({ logs = [], onDeleteLog }: LogsViewProps) {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState<"all" | EventType | string>("all");
     const [page, setPage] = useState(1);
     const [remoteLogs, setRemoteLogs] = useState<LogEntry[]>(Array.isArray(logs) ? logs : []);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
     const PER = 6;
 
     useEffect(() => {
@@ -60,15 +59,14 @@ export default function LogsView({ logs, onDeleteLog }: LogsViewProps) {
             cancelled = true;
         };
     }, []);
-    
-    const safeLogs = Array.isArray(logs) ? logs : [];
 
-    // Lọc dữ liệu theo Từ khóa và Loại sự kiện
+    const safeLogs = Array.isArray(remoteLogs) ? remoteLogs : [];
+
     const filtered = safeLogs.filter(l => {
         const q = search.toLowerCase();
         const pName = (l.personName || "").toLowerCase();
         const pId = (l.personId || "").toLowerCase();
-        const time = (l.timestamp || "").toLowerCase();
+        const time = (l.timestamp || "").toString().toLowerCase();
 
         const matchSearch = pName.includes(q) || pId.includes(q) || time.includes(q);
         if (filter === "all") return matchSearch;
@@ -81,7 +79,7 @@ export default function LogsView({ logs, onDeleteLog }: LogsViewProps) {
         return matchSearch;
     });
 
-    const total = Math.ceil(filtered.length / PER);
+    const total = Math.max(1, Math.ceil(filtered.length / PER));
     const paged = filtered.slice((page - 1) * PER, page * PER);
 
     useEffect(() => {
