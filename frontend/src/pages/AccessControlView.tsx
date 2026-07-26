@@ -11,6 +11,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
     const [lastBy, setLastBy] = useState(DOOR.lastBy)
     const [history, setHistory] = useState<LockHistoryEntry[]>(INIT_LOCK_HISTORY)
     const [confirm, setConfirm] = useState<boolean | null>(null)
+    const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
 
     const handleConfirm = async () => {
@@ -21,7 +22,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
 
         try {
             // Gọi API xuống Backend
-            await fetch("http://localhost:3000/api/door/lock", {
+            await fetch("${API_URL}/api/door/lock", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
