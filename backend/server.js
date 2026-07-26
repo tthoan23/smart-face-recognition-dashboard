@@ -107,9 +107,15 @@ app.post('/api/persons', async (req, res) => {
 
     try {
         // Nghiệp vụ: Tự động sinh ID dựa trên tổng số bản ghi (Ví dụ: P1, P2...)
-        const countResult = await pool.query('SELECT COUNT(*) FROM NguoiQuen');
-        const totalRecords = parseInt(countResult.rows[0].count, 10);
-        const newId = `P${totalRecords + 1}`;
+        const idResult = await pool.query(`
+          SELECT COALESCE(
+            MAX(CAST(SUBSTRING(ID FROM 2) AS INTEGER)),
+            0
+          ) AS max_id
+          FROM NguoiQuen
+        `);
+
+        const newId = `P${parseInt(idResult.rows[0].max_id, 10) + 1}`;
 
         const { rows } = await pool.query(
             `INSERT INTO NguoiQuen (ID, Name, FaceVector, ImagePath) 
