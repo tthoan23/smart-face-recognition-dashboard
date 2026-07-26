@@ -15,9 +15,10 @@ export default function PersonsView() {
     const [modal, setModal] = useState<PersonModal>({ type: "none" });
     const [formName, setFormName] = useState("");
     const [formImage, setFormImage] = useState("");
+    const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
     useEffect(() => {
-        fetch("http://localhost:3000/api/persons")
+        fetch("${API_URL}/api/persons")
             .then(res => res.json())
             .then(data => setPersons(data))
             .catch(err => console.error("Lỗi lấy danh sách người quen", err));
@@ -35,7 +36,7 @@ export default function PersonsView() {
         if (!formName.trim()) return
 
         try {
-            const response = await fetch("http://localhost:3000/api/persons", {
+            const response = await fetch("${API_URL}/api/persons", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -59,7 +60,7 @@ export default function PersonsView() {
             // Lấy ID định danh của người cần sửa (ví dụ: "P1", "P2")
             const personIdToUpdate = targetPerson.personId || targetPerson.id;
 
-            const response = await fetch(`http://localhost:3000/api/persons/${personIdToUpdate}`, {
+            const response = await fetch(`${API_URL}/api/persons/${personIdToUpdate}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -94,7 +95,7 @@ export default function PersonsView() {
             const targetPerson = modal.person;
             const personIdToDelete = targetPerson.personId || targetPerson.id;
 
-            const response = await fetch(`http://localhost:3000/api/persons/${personIdToDelete}`, {
+            const response = await fetch(`${API_URL}/api/persons/${personIdToDelete}`, {
                 method: "DELETE",
             });
 
