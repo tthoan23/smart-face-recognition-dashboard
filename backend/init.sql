@@ -25,15 +25,6 @@ REFERENCES nguoiquen(id)
 ON DELETE SET NULL
 );
 
--- Bảng 3: Lịch sử điều khiển khoá cửa
-CREATE TABLE IF NOT EXISTS lock_history (
-id SERIAL PRIMARY KEY,
-lock_name VARCHAR(100) NOT NULL,
-action VARCHAR(20) NOT NULL,
-performed_by VARCHAR(100),
-created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
 -- ============================================================================
 -- Ghi chú nghiệp vụ:
 -- 1. EventType có thể là:
@@ -46,8 +37,4 @@ created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 --    - Nếu là người quen thì có giá trị và trỏ tới nguoiquen.id
 --    - Nếu là người lạ hoặc giả mạo thì để NULL
 ------------------------------------------------
-
--- 3. lock_history:
---    - Được dùng bởi API POST /api/door/lock
---    - action nên là: locked hoặc unlocked
 -- ============================================================================
