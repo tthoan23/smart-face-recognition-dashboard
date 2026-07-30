@@ -149,6 +149,7 @@ export default function CameraView() {
             </div>
 
             {/* Recorded clips */}
+            {/*
             <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0" }}>
                 <div style={{ padding: "16px 20px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>
@@ -181,7 +182,7 @@ export default function CameraView() {
                         ))}
                     </div>
                 )}
-            </div>
+            </div>*/}
         </div>
     )
 }
