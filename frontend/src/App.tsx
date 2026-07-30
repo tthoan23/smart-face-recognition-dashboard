@@ -24,7 +24,7 @@ export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [view, setView] = useState<View>("dashboard");
   //const [notifications, setNotifications] = useState<Notification[]>(INIT_NOTIFICATIONS);
-  const [showNotif, setShowNotif] = useState(false);
+  //const [showNotif, setShowNotif] = useState(false);
 
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [personsCount, setPersonsCount] = useState<number>(0);
@@ -93,7 +93,7 @@ export default function App() {
         view={view}
         onView={(v: View) => {
           setView(v);
-          setShowNotif(false);
+          //setShowNotif(false);
         }}
         onLogout={() => setLoggedIn(false)}
       />
@@ -114,13 +114,13 @@ export default function App() {
         </main>
       </div>
 
-      /*{showNotif && (
+      {/*{showNotif && (
         <NotificationPanel
           notifications={notifications}
           onClose={() => setShowNotif(false)}
           onMarkRead={markRead}
         />
-      )}*/
+      )}*/}
     </div>
   );
 }
