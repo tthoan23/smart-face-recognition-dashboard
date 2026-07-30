@@ -5,6 +5,7 @@ import { EventType } from '../types';
 export function EventBadge({ type }: { type: EventType }) {
     const map = {
         known: { label: "Known Person", bg: "#dcfce7", text: "#15803d", dot: "#16a34a" },
+        "1. Người quen mở cửa (Cười Liveness đạt)": { label: "1. Người quen mở cửa (Cười Liveness đạt)", bg: "#dcfce7", text: "#15803d", dot: "#16a34a" },
         unknown: { label: "Unknown Visitor", bg: "#fff7ed", text: "#c2410c", dot: "#ea580c" },
         spoofing: { label: "Spoofing Detected", bg: "#fef2f2", text: "#b91c1c", dot: "#dc2626" },
     }
