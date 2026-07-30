@@ -106,7 +106,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
             </div>
 
             {/* History table */}
-            <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0" }}>
+            {/*<div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0" }}>
                 <div style={{ padding: "16px 20px", borderBottom: "1px solid #e2e8f0" }}>
                     <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: "#0f172a" }}>Lịch sử thao tác khoá cửa</h2>
                 </div>
@@ -145,7 +145,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </div>*/}
 
             {/* Confirm modal */}
             {confirm !== null && (
