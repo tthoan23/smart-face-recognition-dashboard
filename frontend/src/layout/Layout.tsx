@@ -71,7 +71,7 @@ export function Header({ title, notifications, onToggleNotif }: { title: string;
                             {unread}
                         </span>
                     )}
-                </button>*/
+                </button>*/}
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                     {/*<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&auto=format" alt="Admin" style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover", border: "2px solid #e2e8f0" }} />*/}
                     <div style={{ lineHeight: 1.3 }}>
