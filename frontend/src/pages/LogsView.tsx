@@ -72,7 +72,7 @@ export default function LogsView({ logs = [], onDeleteLog }: LogsViewProps) {
         if (filter === "all") return matchSearch;
 
         const eType = (l.eventType as string) || "";
-        if (filter === "known") return matchSearch && (eType === "known" || eType === "Người quen mở cửa");
+        if (filter === "known") return matchSearch && (eType === "known" || eType === "Người quen mở cửa" || eType === "1. Người quen mở cửa (Cười Liveness đạt)");
         if (filter === "unknown") return matchSearch && (eType === "unknown" || eType === "Khách lạ tương tác");
         if (filter === "spoofing") return matchSearch && (eType === "spoofing" || eType === "Cảnh báo giả mạo");
 
