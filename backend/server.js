@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pkg from 'pg';
 import dotenv from 'dotenv';
+import { publishOpenDoor } from './mqtt_service.js';
 const { Pool } = pkg;
 
 dotenv.config();
@@ -195,13 +196,21 @@ app.post('/api/door/lock', async (req, res) => {
     try {
         // TODO: Gọi API/MQTT xuống IoT Gateway điều khiển khoá vật lý
         // Sau khi thao tác phần cứng thành công, lưu vào database
-
+                // Chỉ gửi lệnh MQTT khi Admin yêu cầu mở cửa
+        if (action === 'unlocked') {
+            await publishOpenDoor();
+        }
+        
+        // Lưu lịch sử thao tác vào Database
         await pool.query(
             'INSERT INTO lock_history (lock_name, action, performed_by) VALUES ($1, $2, $3)',
             [lockName, action, performedBy]
         );
-
-        res.json({ success: true, message: `Door ${action}` });
+        
+        res.json({
+            success: true,
+            message: `Door ${action}`,
+        });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
