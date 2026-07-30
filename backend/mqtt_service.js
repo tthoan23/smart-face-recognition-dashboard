@@ -25,7 +25,6 @@ connectTimeout: 30000,
 mqttClient.on("connect", () => {
 console.log("MQTT connected successfully.");
 
-```
 mqttClient.subscribe(MQTT_STATUS_TOPIC, (err) => {
     if (err) {
         console.error(
@@ -39,7 +38,7 @@ mqttClient.subscribe(MQTT_STATUS_TOPIC, (err) => {
         `MQTT subscribed to status topic: ${MQTT_STATUS_TOPIC}`
     );
 });
-```
+
 
 });
 
@@ -76,7 +75,7 @@ if (topic !== MQTT_STATUS_TOPIC) {
 return;
 }
 
-```
+
 try {
     const payload = JSON.parse(message.toString());
 
@@ -99,7 +98,7 @@ try {
         err.message
     );
 }
-```
+
 
 });
 
@@ -115,7 +114,7 @@ new Error("MQTT client is not connected")
 );
 }
 
-```
+
     const message = JSON.stringify(payload);
 
     mqttClient.publish(
@@ -141,7 +140,7 @@ new Error("MQTT client is not connected")
         }
     );
 });
-```
+
 
 }
 
