@@ -20,8 +20,31 @@ const viewTitles: Record<View, string> = {
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
+const setCookie = (name: string, value: string, days: number) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/`;
+};
+
+const getCookie = (name: string) => {
+  const cookies = document.cookie.split("; ");
+
+  const cookie = cookies.find(row => row.startsWith(`${name}=`));
+
+  return cookie
+    ? decodeURIComponent(cookie.split("=")[1])
+    : null;
+};
+
+const deleteCookie = (name: string) => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+};
+
 export default function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(() => {
+    return getCookie("loggedIn") === "true";
+  });
   const [view, setView] = useState<View>("dashboard");
   const [notifications, setNotifications] = useState<Notification[]>(INIT_NOTIFICATIONS);
   const [showNotif, setShowNotif] = useState(false);
@@ -85,7 +108,16 @@ export default function App() {
     setNotifications(ns => [newNotif, ...ns]);
   };
 
-  if (!loggedIn) return <LoginScreen onLogin={() => setLoggedIn(true)} />;
+  if (!loggedIn) {
+    return (
+      <LoginScreen
+        onLogin={() => {
+          setCookie("loggedIn", "true", 7);
+          setLoggedIn(true);
+        }}
+      />
+    );
+  }
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -95,7 +127,10 @@ export default function App() {
           setView(v);
           setShowNotif(false);
         }}
-        onLogout={() => setLoggedIn(false)}
+        onLogout={() => {
+          deleteCookie("loggedIn");
+          setLoggedIn(false);
+        }}
       />
 
       <div style={{ marginLeft: 240, flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
