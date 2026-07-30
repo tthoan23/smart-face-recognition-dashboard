@@ -114,13 +114,13 @@ export default function App() {
         </main>
       </div>
 
-      /*{showNotif && (
+      {/*{showNotif && (
         <NotificationPanel
           notifications={notifications}
           onClose={() => setShowNotif(false)}
           onMarkRead={markRead}
         />
-      )}*/
+      )}*/}
     </div>
   );
 }
