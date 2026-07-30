@@ -101,8 +101,8 @@ export default function App() {
       <div style={{ marginLeft: 240, flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         <Header
           title={viewTitles[view]}
-          notifications={notifications}
-          onToggleNotif={() => setShowNotif(s => !s)}
+          //notifications={notifications}
+          //onToggleNotif={() => setShowNotif(s => !s)}
         />
 
         <main style={{ flex: 1, padding: 24, background: "#f1f5f9" }}>
@@ -114,13 +114,13 @@ export default function App() {
         </main>
       </div>
 
-      {/*{showNotif && (
+      /*{showNotif && (
         <NotificationPanel
           notifications={notifications}
           onClose={() => setShowNotif(false)}
           onMarkRead={markRead}
         />
-      )}*/}
+      )}*/
     </div>
   );
 }
