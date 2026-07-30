@@ -64,16 +64,16 @@ export function Header({ title, notifications, onToggleNotif }: { title: string;
         <header style={{ height: 60, background: "#fff", borderBottom: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", position: "sticky", top: 0, zIndex: 40 }}>
             <h1 style={{ margin: 0, fontSize: 17, fontWeight: 600, color: "#0f172a" }}>{title}</h1>
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                {//<button onClick={onToggleNotif} style={{ position: "relative", background: "none", border: "none", cursor: "pointer", color: "#64748b", padding: 6, borderRadius: 8, display: "flex", alignItems: "center" }}>
+                {/*<button onClick={onToggleNotif} style={{ position: "relative", background: "none", border: "none", cursor: "pointer", color: "#64748b", padding: 6, borderRadius: 8, display: "flex", alignItems: "center" }}>
                     <Icon name="bell" size={18} />
                     {unread > 0 && (
                         <span style={{ position: "absolute", top: 2, right: 2, width: 16, height: 16, borderRadius: "50%", background: "#dc2626", color: "#fff", fontSize: 10, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", border: "2px solid #fff" }}>
                             {unread}
                         </span>
                     )}
-                </button>
+                </button>*/
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    {//<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&auto=format" alt="Admin" style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover", border: "2px solid #e2e8f0" }} />
+                    {/*<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&auto=format" alt="Admin" style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover", border: "2px solid #e2e8f0" }} />*/}
                     <div style={{ lineHeight: 1.3 }}>
                         <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: "#0f172a" }}>Admin User</p>
                         <p style={{ margin: 0, fontSize: 11, color: "#94a3b8" }}>Quản trị viên</p>
