@@ -12,7 +12,7 @@ export default function DashboardView({ logs, personsCount = 0 }: DashboardViewP
     const safeLogs = Array.isArray(logs) ? logs : [];
 
     // Lọc các số liệu thống kê
-    const known = safeLogs.filter(l => (l.eventType as string) === "known" || (l.eventType as string) === "Người quen mở cửa").length;
+    const known = safeLogs.filter(l => (l.eventType as string) === "known" || (l.eventType as string) === "Người quen mở cửa" || (l.eventType as string) === "1. Người quen mở cửa (Cười Liveness đạt)").length;
     const unknown = safeLogs.filter(l => (l.eventType as string) === "unknown" || (l.eventType as string) === "Khách lạ tương tác").length;
     const spoofing = safeLogs.filter(l => (l.eventType as string) === "spoofing" || (l.eventType as string) === "Cảnh báo giả mạo").length;
 
