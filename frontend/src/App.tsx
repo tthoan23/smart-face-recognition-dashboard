@@ -23,7 +23,7 @@ const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 export default function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [view, setView] = useState<View>("dashboard");
-  const [notifications, setNotifications] = useState<Notification[]>(INIT_NOTIFICATIONS);
+  //const [notifications, setNotifications] = useState<Notification[]>(INIT_NOTIFICATIONS);
   const [showNotif, setShowNotif] = useState(false);
 
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -71,8 +71,8 @@ export default function App() {
     }
   };
 
-  const markRead = (id: number) =>
-    setNotifications(ns => ns.map(n => (n.id === id ? { ...n, read: true } : n)));
+  //const markRead = (id: number) =>
+    //setNotifications(ns => ns.map(n => (n.id === id ? { ...n, read: true } : n)));
 
   const handleLockChange = (lockName: string, action: "locked" | "unlocked") => {
     const newNotif: Notification = {
@@ -82,7 +82,7 @@ export default function App() {
       time: "Vừa xong",
       read: false,
     };
-    setNotifications(ns => [newNotif, ...ns]);
+    //setNotifications(ns => [newNotif, ...ns]);
   };
 
   if (!loggedIn) return <LoginScreen onLogin={() => setLoggedIn(true)} />;
