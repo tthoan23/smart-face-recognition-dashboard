@@ -22,7 +22,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
 
         try {
             // Gọi API xuống Backend
-            await fetch("${API_URL}/api/door/lock", {
+            await fetch(`${API_URL}/api/door/lock`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
