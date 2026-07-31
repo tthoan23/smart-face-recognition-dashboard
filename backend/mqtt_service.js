@@ -432,7 +432,6 @@ id: personId,
 export function publishEnrollFace(personId, name) {
 return publishCommand({
 action: "enroll_face",
-id: personId,
-name: name,
+        name: name,
 });
 }
