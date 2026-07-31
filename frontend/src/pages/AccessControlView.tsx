@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LockHistoryEntry } from "../types";
 import { INIT_LOCKS, INIT_LOCK_HISTORY } from "../utils/mockData";
 import { Icon } from "../components/Icons";
@@ -14,6 +14,26 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
     const [history, setHistory] = useState<LockHistoryEntry[]>(INIT_LOCK_HISTORY)
     const [confirm, setConfirm] = useState<boolean | null>(null)
     const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
+
+    useEffect(() => {
+        if (locked || countdown <= 0) return;
+
+        const timer = setInterval(() => {
+            setCountdown((prev) => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    setLocked(true);
+                    setLastAction(new Date().toLocaleString("sv").replace("T", " "));
+                    setLastBy("Hệ thống tự động");
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [locked, countdown > 0]);
+
 
 
     const handleConfirm = async () => {
