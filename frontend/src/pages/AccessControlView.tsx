@@ -8,6 +8,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
     const DOOR = INIT_LOCKS[0]
     const [locked, setLocked] = useState(true)
     const [countdown, setCountdown] = useState(0)
+    const [loading, setLoading] = useState(false)
     const [lastAction, setLastAction] = useState(DOOR.lastAction)
     const [lastBy, setLastBy] = useState(DOOR.lastBy)
     const [history, setHistory] = useState<LockHistoryEntry[]>(INIT_LOCK_HISTORY)
