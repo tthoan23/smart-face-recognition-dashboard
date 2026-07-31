@@ -196,8 +196,6 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
                     Cửa sẽ tự động khóa lại sau 5 giây.
                 </p>
             </div>
-            
-            </div>
 
             {/* History table */}
             {/*<div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0" }}>
