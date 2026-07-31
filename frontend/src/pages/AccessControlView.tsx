@@ -190,7 +190,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
                 opacity: loading || !locked
                 ? 0.8
                 : 1,
-                }}
+                }}>
                 
                 {loading ? (
     "⏳ Đang gửi lệnh..."
@@ -198,7 +198,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
     "🔓 Mở cửa từ xa"
 ) : (
     `🔒 Cửa đang mở (${countdown}s)`
-                }
+                )}
                 </button>
             
                 {/* Description */}
