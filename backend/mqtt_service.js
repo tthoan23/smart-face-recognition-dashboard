@@ -12,58 +12,46 @@ process.env.MQTT_STATUS_TOPIC || "kenit1301/aiot/status";
 // ============================================================================
 // MQTT Client
 // ============================================================================
-let mqttClient;
-let dbPool;
-
-
 export function initMQTT(pool) {
-    dbPool = pool;
-
-    mqttClient = mqtt.connect(MQTT_BROKER_URL, {
-        reconnectPeriod: 5000,
-        connectTimeout: 30000,
-    });
-
     mqttClient.on("connect", () => {
         console.log("MQTT connected successfully.");
 
-        mqttClient.subscribe(
-            MQTT_STATUS_TOPIC,
-            (err) => {
-                if (err) {
-                    console.error(
-                        "MQTT subscribe failed:",
-                        err.message
-                    );
-                    return;
-                }
-
-                console.log(
-                    `MQTT subscribed to status topic: ${MQTT_STATUS_TOPIC}`
+        mqttClient.subscribe(MQTT_STATUS_TOPIC, (err) => {
+            if (err) {
+                console.error(
+                    "MQTT subscribe failed:",
+                    err.message
                 );
+                return;
             }
-        );
+
+            console.log(
+                `MQTT subscribed to status topic: ${MQTT_STATUS_TOPIC}`
+            );
+        });
     });
 
-    mqttClient.on("error", (err) => {
-        console.error(
-            "MQTT connection error:",
-            err.message
-        );
-    });
+    mqttClient.on("message", async (topic, message) => {
+        if (topic !== MQTT_STATUS_TOPIC) {
+            return;
+        }
 
-    mqttClient.on("reconnect", () => {
-        console.log("MQTT reconnecting...");
-    });
+        try {
+            const payload = JSON.parse(message.toString());
 
-    mqttClient.on("offline", () => {
-        console.log("MQTT client is offline.");
-    });
+            console.log("MQTT status received:", payload);
 
-    mqttClient.on(
-        "message",
-        handleMQTTMessage
-    );
+            if (payload.status === "enroll_success") {
+                await handleEnrollSuccess(payload, pool);
+            }
+
+        } catch (err) {
+            console.error(
+                "MQTT message handling failed:",
+                err.message
+            );
+        }
+    });
 }
 
 async function handleMQTTMessage(topic, message) {
