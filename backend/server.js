@@ -2,7 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import pkg from 'pg';
 import dotenv from 'dotenv';
-import { publishOpenDoor } from './mqtt_service.js';
+import { initMQTT,
+    publishOpenDoor,
+    publishDeleteFace,
+    publishEnrollFace } from './mqtt_service.js';
 const { Pool } = pkg;
 
 dotenv.config();
@@ -220,6 +223,8 @@ const PORT = process.env.PORT || 3000;
 
 async function startServer() {
     await initializeDatabase();
+
+    initMQTT(pool);
 
     app.listen(PORT, () => {
         console.log(`Backend running on port ${PORT}`);
