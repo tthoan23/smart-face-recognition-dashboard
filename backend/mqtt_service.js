@@ -239,7 +239,7 @@ async function handleEnrollSuccess(payload, pool) {
     }
 }
 
-mqttClient.on("message", (topic, message) => {
+mqttClient.on("message", async (topic, message) => {
 if (topic !== MQTT_STATUS_TOPIC) {
 return;
 }
