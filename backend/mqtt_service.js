@@ -378,7 +378,7 @@ id: personId,
 }
 
 // Đăng ký khuôn mặt từ xa
-export function publishEnrollFace(personId, name) {
+export function publishEnrollFace(name) {
 return publishCommand({
 action: "enroll_face",
         name: name,
