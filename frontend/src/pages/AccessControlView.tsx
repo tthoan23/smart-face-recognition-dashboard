@@ -15,7 +15,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
     const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
 
-    const handleOpenDoor = async () => {
+    const handleConfirm = async () => {
         if (loading || !locked) return;
     
         try {
@@ -169,7 +169,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
                 </div>
                 {/* Open door action */}
                 <button
-                onClick={handleOpenDoor}
+                onClick={handleConfirm}
                 disabled={loading || !locked}
                 style={{
                 width: "100%",
