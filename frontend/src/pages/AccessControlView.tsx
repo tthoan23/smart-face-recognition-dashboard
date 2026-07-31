@@ -48,61 +48,155 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
 
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 720, margin: "0 auto" }}>
-            {/* Single lock card */}
-            <div style={{
-                background: "#fff", borderRadius: 16, border: `2px solid ${locked ? "#e2e8f0" : "#86efac"}`,
-                padding: "32px", display: "flex", flexDirection: "column", gap: 24,
-                boxShadow: locked ? "0 1px 8px rgba(0,0,0,0.04)" : "0 0 0 6px rgba(34,197,94,0.07), 0 1px 8px rgba(0,0,0,0.04)",
-                transition: "border-color .3s, box-shadow .3s",
-            }}>
-                {/* Top row: icon + name + toggle */}
+                {/* Single lock card */}
+                <div style={{
+                    background: "#fff",
+                    borderRadius: 16,
+                    border: "2px solid #e2e8f0",
+                    padding: "32px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 24,
+                    boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
+                }}>
+            
+                {/* Top row: icon + name + status */}
                 <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
                     <span style={{
-                        width: 72, height: 72, borderRadius: 18, flexShrink: 0,
-                        background: locked ? "#f1f5f9" : "#dcfce7",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        color: locked ? "#475569" : "#16a34a",
-                        transition: "background .3s, color .3s",
+                        width: 72,
+                        height: 72,
+                        borderRadius: 18,
+                        flexShrink: 0,
+                        background: "#f1f5f9",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#475569",
                     }}>
-                        <Icon name={locked ? "lock" : "unlock"} size={34} />
+                        <Icon name="lock" size={34} />
                     </span>
+            
                     <div style={{ flex: 1 }}>
-                        <p style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0f172a" }}>{DOOR.name}</p>
-                        <p style={{ margin: "4px 0 0", fontSize: 13, color: "#94a3b8" }}>{DOOR.location}</p>
+                        <p style={{
+                            margin: 0,
+                            fontSize: 18,
+                            fontWeight: 700,
+                            color: "#0f172a"
+                        }}>
+                            {DOOR.name}
+                        </p>
+            
+                        <p style={{
+                            margin: "4px 0 0",
+                            fontSize: 13,
+                            color: "#94a3b8"
+                        }}>
+                            {DOOR.location}
+                        </p>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-                        <ToggleSwitch on={!locked} onChange={v => setConfirm(!v)} />
-                        <span style={{ fontSize: 11, fontWeight: 600, color: locked ? "#94a3b8" : "#16a34a" }}>
-                            {locked ? "Đang khoá" : "Đang mở"}
-                        </span>
+            
+                    {/* Status badge */}
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        padding: "8px 12px",
+                        borderRadius: 999,
+                        background: locked ? "#f1f5f9" : "#fef3c7",
+                        color: locked ? "#475569" : "#b45309",
+                        fontSize: 12,
+                        fontWeight: 700,
+                    }}>
+                        <span style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: "50%",
+                            background: locked ? "#64748b" : "#f59e0b",
+                        }} />
+            
+                        {locked ? "Đang khoá" : "Đang mở"}
                     </div>
                 </div>
-
+            
                 {/* Big status display */}
                 <div style={{
-                    borderRadius: 12, padding: "20px 24px", textAlign: "center",
-                    background: locked ? "#f8fafc" : "#f0fdf4",
-                    border: `1px solid ${locked ? "#e2e8f0" : "#bbf7d0"}`,
+                    borderRadius: 12,
+                    padding: "24px",
+                    textAlign: "center",
+                    background: locked ? "#f8fafc" : "#fffbeb",
+                    border: `1px solid ${locked ? "#e2e8f0" : "#fde68a"}`,
                     transition: "background .3s, border-color .3s",
                 }}>
-                    <p style={{ margin: 0, fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", color: locked ? "#334155" : "#15803d" }}>
+                    <p style={{
+                        margin: 0,
+                        fontSize: 28,
+                        fontWeight: 800,
+                        letterSpacing: "-0.02em",
+                        color: locked ? "#334155" : "#b45309",
+                    }}>
                         {locked ? "🔒 Đang khoá" : "🔓 Đang mở"}
                     </p>
-                    <p style={{ margin: "8px 0 0", fontSize: 13, color: "#94a3b8" }}>
+            
+                    <p style={{
+                        margin: "8px 0 0",
+                        fontSize: 13,
+                        color: "#94a3b8"
+                    }}>
                         Cập nhật lúc {lastAction} · bởi {lastBy}
                     </p>
+            
+                    {!locked && (
+                        <p style={{
+                            margin: "12px 0 0",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: "#d97706"
+                        }}>
+                            Cửa sẽ tự động khoá sau 5 giây
+                        </p>
+                    )}
                 </div>
-
-                {/* Action button */}
+            
+                {/* Open door action */}
                 <button
-                    onClick={() => setConfirm(!locked)}
+                    onClick={() => {
+                        if (locked) {
+                            setConfirm(true);
+                        }
+                    }}
+                    disabled={!locked}
                     style={{
-                        width: "100%", padding: "13px", borderRadius: 10, border: "none", fontSize: 15, fontWeight: 700, cursor: "pointer", transition: "background .15s",
-                        background: locked ? "#2563eb" : "#dc2626", color: "#fff",
+                        width: "100%",
+                        padding: "14px",
+                        borderRadius: 10,
+                        border: "none",
+                        fontSize: 15,
+                        fontWeight: 700,
+                        cursor: locked ? "pointer" : "not-allowed",
+                        transition: "background .15s, opacity .15s",
+                        background: locked ? "#2563eb" : "#cbd5e1",
+                        color: "#fff",
                         letterSpacing: "-0.01em",
-                    }}>
-                    {locked ? "Mở khoá cửa từ xa" : "Khoá cửa lại"}
+                        opacity: locked ? 1 : 0.8,
+                    }}
+                >
+                    {locked ? "🔓 Mở cửa từ xa" : "🔒 Cửa đang mở"}
                 </button>
+            
+                {/* Description */}
+                <p style={{
+                    margin: 0,
+                    textAlign: "center",
+                    fontSize: 12,
+                    lineHeight: 1.5,
+                    color: "#94a3b8"
+                }}>
+                    Khi mở cửa, hệ thống sẽ gửi lệnh đến thiết bị ESP32 qua MQTT.
+                    <br />
+                    Cửa sẽ tự động khóa lại sau 5 giây.
+                </p>
+            </div>
+            
             </div>
 
             {/* History table */}
