@@ -6,7 +6,7 @@ export function Sidebar({ view, onView, onLogout }: { view: View; onView: (v: Vi
         { id: "dashboard", label: "Dashboard", icon: "dashboard" },
         { id: "logs", label: "Nhật ký ra vào", icon: "logs" },
         { id: "persons", label: "Người quen", icon: "persons" },
-        { id: "camera", label: "Camera Livestream", icon: "camera" },
+        //{ id: "camera", label: "Camera Livestream", icon: "camera" },
         { id: "access", label: "Điều khiển khoá", icon: "lock" },
     ]
     return (
