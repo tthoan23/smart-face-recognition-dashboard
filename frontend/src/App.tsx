@@ -14,7 +14,7 @@ const viewTitles: Record<View, string> = {
   dashboard: "Dashboard",
   logs: "Nhật ký ra vào",
   persons: "Danh sách người quen",
-  camera: "Camera Livestream",
+  //camera: "Camera Livestream",
   access: "Điều khiển khoá cửa",
 };
 
