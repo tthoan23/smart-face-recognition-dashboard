@@ -12,11 +12,180 @@ process.env.MQTT_STATUS_TOPIC || "kenit1301/aiot/status";
 // ============================================================================
 // MQTT Client
 // ============================================================================
+let mqttClient;
+let dbPool;
 
-const mqttClient = mqtt.connect(MQTT_BROKER_URL, {
-reconnectPeriod: 5000,
-connectTimeout: 30000,
-});
+
+export function initMQTT(pool) {
+    dbPool = pool;
+
+    mqttClient = mqtt.connect(MQTT_BROKER_URL, {
+        reconnectPeriod: 5000,
+        connectTimeout: 30000,
+    });
+
+    mqttClient.on("connect", () => {
+        console.log("MQTT connected successfully.");
+
+        mqttClient.subscribe(
+            MQTT_STATUS_TOPIC,
+            (err) => {
+                if (err) {
+                    console.error(
+                        "MQTT subscribe failed:",
+                        err.message
+                    );
+                    return;
+                }
+
+                console.log(
+                    `MQTT subscribed to status topic: ${MQTT_STATUS_TOPIC}`
+                );
+            }
+        );
+    });
+
+    mqttClient.on("error", (err) => {
+        console.error(
+            "MQTT connection error:",
+            err.message
+        );
+    });
+
+    mqttClient.on("reconnect", () => {
+        console.log("MQTT reconnecting...");
+    });
+
+    mqttClient.on("offline", () => {
+        console.log("MQTT client is offline.");
+    });
+
+    mqttClient.on(
+        "message",
+        handleMQTTMessage
+    );
+}
+
+async function handleMQTTMessage(topic, message) {
+    if (topic !== MQTT_STATUS_TOPIC) {
+        return;
+    }
+
+    try {
+        const payload = JSON.parse(
+            message.toString()
+        );
+
+        console.log(
+            "MQTT status received:",
+            payload
+        );
+
+        if (
+            payload.status ===
+            "enroll_success"
+        ) {
+            await handleEnrollSuccess(
+                payload
+            );
+        }
+
+        if (
+            payload.status ===
+            "enroll_failed"
+        ) {
+            console.error(
+                "ESP32 enroll failed:",
+                payload
+            );
+        }
+
+        if (
+            payload.status ===
+            "delete_success"
+        ) {
+            console.log(
+                "ESP32 delete success:",
+                payload.id
+            );
+        }
+
+        if (
+            payload.status ===
+            "delete_failed"
+        ) {
+            console.error(
+                "ESP32 delete failed:",
+                payload
+            );
+        }
+
+    } catch (err) {
+        console.error(
+            "Invalid MQTT JSON payload:",
+            err.message
+        );
+    }
+}
+
+async function handleEnrollSuccess(payload) {
+    const {
+        name,
+        id,
+        image_url
+    } = payload;
+
+    if (!name || !id) {
+        console.error(
+            "enroll_success missing name or id"
+        );
+        return;
+    }
+
+    try {
+        const existing =
+            await dbPool.query(
+                'SELECT ID FROM NguoiQuen WHERE ID = $1',
+                [id]
+            );
+
+        if (existing.rows.length > 0) {
+            console.warn(
+                `Person ${id} already exists.`
+            );
+            return;
+        }
+
+        const result =
+            await dbPool.query(
+                `INSERT INTO NguoiQuen
+                    (ID, Name, FaceVector, ImagePath)
+                 VALUES
+                    ($1, $2, $3, $4)
+                 RETURNING
+                    ID AS "personId",
+                    Name AS name,
+                    ImagePath AS image`,
+                [
+                    id,
+                    name,
+                    null,
+                    image_url || null
+                ]
+            );
+
+        console.log(
+            "New face enrolled:",
+            result.rows[0]
+        );
+
+    } catch (err) {
+        console.error(
+            "Database error while saving enrolled face:",
+            err.message
+        );
+    }
+}
 
 // ============================================================================
 // 1. MQTT Connection
@@ -70,6 +239,65 @@ console.log("MQTT client is offline.");
 // 5. Nhận Status từ ESP32
 // ============================================================================
 
+async function handleEnrollSuccess(payload, pool) {
+    const { status, name, id, image_url } = payload;
+
+    if (status !== "enroll_success") {
+        return;
+    }
+
+    if (!name || !id) {
+        console.error(
+            "Invalid enroll_success payload: missing name or id"
+        );
+        return;
+    }
+
+    try {
+        // Kiểm tra ID đã tồn tại chưa
+        const existing = await pool.query(
+            'SELECT ID FROM NguoiQuen WHERE ID = $1',
+            [id]
+        );
+
+        if (existing.rows.length > 0) {
+            console.warn(
+                `Person ${id} already exists in database.`
+            );
+            return;
+        }
+
+        // Thêm người quen mới vào database
+        const result = await pool.query(
+            `INSERT INTO NguoiQuen
+                (ID, Name, FaceVector, ImagePath)
+             VALUES
+                ($1, $2, $3, $4)
+             RETURNING
+                ID AS "personId",
+                Name AS name,
+                ImagePath AS image`,
+            [
+                id,
+                name,
+                null,
+                image_url || null
+            ]
+        );
+
+        console.log(
+            "Enroll success saved to database:",
+            result.rows[0]
+        );
+
+    } catch (err) {
+        console.error(
+            "Failed to save enroll_success to database:",
+            err.message
+        );
+    }
+}
+
 mqttClient.on("message", (topic, message) => {
 if (topic !== MQTT_STATUS_TOPIC) {
 return;
@@ -84,13 +312,50 @@ try {
     // TODO:
     // Xử lý các status từ ESP32 ở đây.
     //
-    // Ví dụ:
-    // enroll_success
-    // enroll_failed
-    // delete_success
-    // delete_failed
-    // door_opened
-    // door_failed
+    // ================================================================
+        // ESP32 báo đăng ký khuôn mặt thành công
+        // ================================================================
+
+        if (payload.status === "enroll_success") {
+            await handleEnrollSuccess(payload, mqttClient.pool);
+        }
+
+        // ================================================================
+        // Các status khác có thể xử lý sau
+        // ================================================================
+
+        if (payload.status === "enroll_failed") {
+            console.error(
+                "ESP32 enroll failed:",
+                payload
+            );
+        }
+
+        if (payload.status === "delete_success") {
+            console.log(
+                `ESP32 deleted face successfully: ${payload.id}`
+            );
+        }
+
+        if (payload.status === "delete_failed") {
+            console.error(
+                "ESP32 delete face failed:",
+                payload
+            );
+        }
+
+        if (payload.status === "door_opened") {
+            console.log(
+                "ESP32 confirmed door opened."
+            );
+        }
+
+        if (payload.status === "door_failed") {
+            console.error(
+                "ESP32 failed to open door:",
+                payload
+            );
+        }
 
 } catch (err) {
     console.error(
