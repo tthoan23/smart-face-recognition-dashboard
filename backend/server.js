@@ -127,6 +127,8 @@ app.post('/api/persons', async (req, res) => {
             [newId, name, faceVector, imagePath]
         );
 
+        await publishEnrollFace(name.trim());
+
         res.json(rows[0]);
     } catch (err) {
         res.status(500).json({ error: err.message });
