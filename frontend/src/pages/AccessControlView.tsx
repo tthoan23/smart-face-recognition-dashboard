@@ -15,7 +15,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
     const API_URL = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
 
 
-    const handleConfirm = async () => {
+    const handleOpenDoor = async () => {
         if (loading || !locked) return;
     
         try {
