@@ -143,7 +143,7 @@ export default function App() {
         <main style={{ flex: 1, padding: 24, background: "#f1f5f9" }}>
           {view === "dashboard" && <DashboardView logs={logs} personsCount={personsCount} />}
           {view === "logs" && <LogsView logs={logs} onDeleteLog={handleDeleteLog} />}
-          {//{view === "persons" && <PersonsView />}
+          {/* {view === "persons" && <PersonsView />} */}
           {view === "camera" && <CameraView />}
           {view === "access" && <AccessControlView onLockChange={handleLockChange} />}
         </main>
