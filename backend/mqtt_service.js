@@ -128,65 +128,6 @@ async function handleMQTTMessage(topic, message) {
     }
 }
 
-async function handleEnrollSuccess(payload) {
-    const {
-        name,
-        id,
-        image_url
-    } = payload;
-
-    if (!name || !id) {
-        console.error(
-            "enroll_success missing name or id"
-        );
-        return;
-    }
-
-    try {
-        const existing =
-            await dbPool.query(
-                'SELECT ID FROM NguoiQuen WHERE ID = $1',
-                [id]
-            );
-
-        if (existing.rows.length > 0) {
-            console.warn(
-                `Person ${id} already exists.`
-            );
-            return;
-        }
-
-        const result =
-            await dbPool.query(
-                `INSERT INTO NguoiQuen
-                    (ID, Name, FaceVector, ImagePath)
-                 VALUES
-                    ($1, $2, $3, $4)
-                 RETURNING
-                    ID AS "personId",
-                    Name AS name,
-                    ImagePath AS image`,
-                [
-                    id,
-                    name,
-                    null,
-                    image_url || null
-                ]
-            );
-
-        console.log(
-            "New face enrolled:",
-            result.rows[0]
-        );
-
-    } catch (err) {
-        console.error(
-            "Database error while saving enrolled face:",
-            err.message
-        );
-    }
-}
-
 // ============================================================================
 // 1. MQTT Connection
 // ============================================================================
