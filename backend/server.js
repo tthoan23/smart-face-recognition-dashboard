@@ -204,20 +204,10 @@ app.post('/api/door/lock', async (req, res) => {
         // TODO: Gọi API/MQTT xuống IoT Gateway điều khiển khoá vật lý
         // Sau khi thao tác phần cứng thành công, lưu vào database
                 // Chỉ gửi lệnh MQTT khi Admin yêu cầu mở cửa
-        if (action === 'unlocked') {
-            await publishOpenDoor();
-        }
-        
-        // Lưu lịch sử thao tác vào Database
-        await pool.query(
-            'INSERT INTO lock_history (lock_name, action, performed_by) VALUES ($1, $2, $3)',
-            [lockName, action, performedBy]
-        );
-        
-        res.json({
-            success: true,
-            message: `Door ${action}`,
-        });
+        await publishOpenDoor(); 
+        console.log( 
+            `Open door command sent via MQTT by ${performedBy || "Unknown User"}` ); 
+        res.json({ success: true, message: "Open door command sent successfully", lockName: lockName || "Main Door", performedBy: performedBy || "Unknown User", action: "open_door" });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
