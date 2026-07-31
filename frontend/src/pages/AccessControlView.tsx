@@ -130,68 +130,74 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
                 </div>
             
                 {/* Big status display */}
-                <div style={{
-                    borderRadius: 12,
-                    padding: "24px",
-                    textAlign: "center",
-                    background: locked ? "#f8fafc" : "#fffbeb",
-                    border: `1px solid ${locked ? "#e2e8f0" : "#fde68a"}`,
-                    transition: "background .3s, border-color .3s",
+                <div style={{ borderRadius: 12, padding: "24px", textAlign: "center", background: locked ? "#f8fafc" : "#fffbeb", border: `1px solid ${locked ? "#e2e8f0" : "#fde68a"}`, transition: "background .3s, border-color .3s", }}> <p style={{ margin: 0, fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", color: locked ? "#334155" : "#b45309", }}> {locked ? "🔒 Đang khoá" : "🔓 Đang mở" } </p>
+                <p style={{
+                    margin: "8px 0 0",
+                    fontSize: 13,
+                    color: "#94a3b8"
                 }}>
-                    <p style={{
-                        margin: 0,
-                        fontSize: 28,
-                        fontWeight: 800,
-                        letterSpacing: "-0.02em",
-                        color: locked ? "#334155" : "#b45309",
+                    Cập nhật lúc {lastAction} · bởi {lastBy}
+                </p>
+                
+                {!locked && countdown > 0 && (
+                    <div style={{
+                        marginTop: 16,
+                        padding: "12px 16px",
+                        borderRadius: 10,
+                        background: "#fef3c7",
+                        border: "1px solid #fde68a",
                     }}>
-                        {locked ? "🔒 Đang khoá" : "🔓 Đang mở"}
-                    </p>
-            
-                    <p style={{
-                        margin: "8px 0 0",
-                        fontSize: 13,
-                        color: "#94a3b8"
-                    }}>
-                        Cập nhật lúc {lastAction} · bởi {lastBy}
-                    </p>
-            
-                    {!locked && (
                         <p style={{
-                            margin: "12px 0 0",
-                            fontSize: 13,
+                            margin: 0,
+                            fontSize: 14,
                             fontWeight: 600,
+                            color: "#b45309"
+                        }}>
+                            Cửa sẽ tự động khoá sau
+                        </p>
+                
+                        <p style={{
+                            margin: "4px 0 0",
+                            fontSize: 32,
+                            fontWeight: 800,
                             color: "#d97706"
                         }}>
-                            Cửa sẽ tự động khoá sau 5 giây
+                            {countdown} giây
                         </p>
-                    )}
+                    </div>
+                )}
                 </div>
-            
                 {/* Open door action */}
                 <button
-                    onClick={() => {
-                        if (locked) {
-                            setConfirm(true);
-                        }
-                    }}
-                    disabled={!locked}
-                    style={{
-                        width: "100%",
-                        padding: "14px",
-                        borderRadius: 10,
-                        border: "none",
-                        fontSize: 15,
-                        fontWeight: 700,
-                        cursor: locked ? "pointer" : "not-allowed",
-                        transition: "background .15s, opacity .15s",
-                        background: locked ? "#2563eb" : "#cbd5e1",
-                        color: "#fff",
-                        letterSpacing: "-0.01em",
-                        opacity: locked ? 1 : 0.8,
-                    }}
-                >
-                    {locked ? "🔓 Mở cửa từ xa" : "🔒 Cửa đang mở"}
+                onClick={handleOpenDoor}
+                disabled={loading || !locked}
+                style={{
+                width: "100%",
+                padding: "14px",
+                borderRadius: 10,
+                border: "none",
+                fontSize: 15,
+                fontWeight: 700,
+                cursor: loading || !locked
+                ? "not-allowed"
+                : "pointer",
+                transition: "background .15s, opacity .15s",
+                background: locked
+                ? "#2563eb"
+                : "#cbd5e1",
+                color: "#fff",
+                letterSpacing: "-0.01em",
+                opacity: loading || !locked
+                ? 0.8
+                : 1,
+                }}
+                
+                {loading
+                    ? "⏳ Đang gửi lệnh..."
+                    : locked
+                        ? "🔓 Mở cửa từ xa"
+                        : `🔒 Cửa đang mở (${countdown}s)`
+                }
                 </button>
             
                 {/* Description */}
@@ -202,7 +208,7 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
                     lineHeight: 1.5,
                     color: "#94a3b8"
                 }}>
-                    Khi mở cửa, hệ thống sẽ gửi lệnh đến thiết bị ESP32 qua MQTT.
+
                     <br />
                     Cửa sẽ tự động khóa lại sau 5 giây.
                 </p>
