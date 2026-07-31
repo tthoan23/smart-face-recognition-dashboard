@@ -9,6 +9,11 @@ process.env.MQTT_COMMAND_TOPIC || "kenit1301/aiot/commands";
 const MQTT_STATUS_TOPIC =
 process.env.MQTT_STATUS_TOPIC || "kenit1301/aiot/status";
 
+const mqttClient = mqtt.connect(MQTT_BROKER_URL, {
+    reconnectPeriod: 5000,
+    connectTimeout: 30000,
+});
+
 // ============================================================================
 // MQTT Client
 // ============================================================================
@@ -51,6 +56,21 @@ export function initMQTT(pool) {
                 err.message
             );
         }
+    });
+
+    mqttClient.on("error", (err) => {
+        console.error(
+            "MQTT connection error:",
+            err.message
+        );
+    });
+
+    mqttClient.on("reconnect", () => {
+        console.log("MQTT reconnecting...");
+    });
+
+    mqttClient.on("offline", () => {
+        console.log("MQTT client is offline.");
     });
 }
 
