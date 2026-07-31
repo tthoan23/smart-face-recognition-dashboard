@@ -6,7 +6,9 @@ import { ToggleSwitch, Modal } from "../components/UI";
 
 export default function AccessControlView({ onLockChange }: { onLockChange: (lockName: string, action: "locked" | "unlocked") => void }) {
     const DOOR = INIT_LOCKS[0]
-    const [locked, setLocked] = useState(DOOR.locked)
+    const [locked, setLocked] = useState(true)
+    const [countdown, setCountdown] = useState(0)
+    const [countdown, setCountdown] = useState(0)
     const [lastAction, setLastAction] = useState(DOOR.lastAction)
     const [lastBy, setLastBy] = useState(DOOR.lastBy)
     const [history, setHistory] = useState<LockHistoryEntry[]>(INIT_LOCK_HISTORY)
@@ -15,34 +17,44 @@ export default function AccessControlView({ onLockChange }: { onLockChange: (loc
 
 
     const handleConfirm = async () => {
-        if (confirm === null) return
-        const next = confirm
-        const now = new Date().toLocaleString("sv").replace("T", " ")
-
-
+        if (loading || !locked) return;
+    
         try {
-            // Gọi API xuống Backend
-            await fetch(`${API_URL}/api/door/lock`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    lockName: DOOR.name,
-                    action: next ? "locked" : "unlocked",
-                    performedBy: "Admin User"
-                })
-            });
-
-            setLocked(next)
-            setLastAction(now)
-            setLastBy("Admin User")
-            setHistory(h => [
-                { id: Date.now(), lockId: 1, lockName: DOOR.name, timestamp: now, action: next ? "locked" : "unlocked", performedBy: "Admin User" },
-                ...h
-            ]);
-            onLockChange(DOOR.name, next ? "locked" : "unlocked")
-            setConfirm(null)
+            setLoading(true);
+    
+            const response = await fetch(
+                `${API_URL}/api/door/lock`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        lockName: DOOR.name,
+                        performedBy: "Admin User"
+                    })
+                }
+            );
+    
+            if (!response.ok) {
+                throw new Error("Không thể gửi lệnh mở cửa");
+            }
+    
+            // Backend đã publish MQTT thành công
+            setLocked(false);
+            setCountdown(5);
+            setLastAction(
+                new Date().toLocaleString("sv").replace("T", " ")
+            );
+            setLastBy("Admin User");
+    
         } catch (err) {
-            console.error("Lỗi khi thay đổi trạng thái khoá: ", err)
+            console.error(
+                "Lỗi khi mở cửa:",
+                err
+            );
+        } finally {
+            setLoading(false);
         }
     }
 
