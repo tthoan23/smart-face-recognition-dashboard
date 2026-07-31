@@ -171,6 +171,8 @@ app.delete('/api/persons/:id', async (req, res) => {
             return res.status(404).json({ error: "Không tìm thấy người quen để xóa" });
         }
 
+        await publishDeleteFace(id);
+
         res.json({ success: true, message: `Đã xóa người quen ${id}` });
     } catch (err) {
         console.error("Lỗi DELETE /api/persons:", err.message);
