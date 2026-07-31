@@ -219,6 +219,49 @@ app.post('/api/door/lock', async (req, res) => {
     }
 });
 
+
+// ============================================================================
+// API: Đăng ký khuôn mặt từ xa qua MQTT
+// ============================================================================
+
+app.post('/api/persons/enroll', async (req, res) => {
+    const { name } = req.body;
+
+    // Kiểm tra dữ liệu đầu vào
+    if (!name || !name.trim()) {
+        return res.status(400).json({
+            success: false,
+            error: "Tên người quen không được để trống"
+        });
+    }
+
+    try {
+        // Gửi lệnh MQTT đến ESP32
+        await publishEnrollFace(name.trim());
+
+        console.log(
+            `Enroll face command sent to ESP32 for: ${name.trim()}`
+        );
+
+        res.status(202).json({
+            success: true,
+            message: "Đã gửi yêu cầu đăng ký khuôn mặt đến ESP32",
+            name: name.trim()
+        });
+
+    } catch (err) {
+        console.error(
+            "Lỗi gửi lệnh enroll_face:",
+            err.message
+        );
+
+        res.status(500).json({
+            success: false,
+            error: "Không thể gửi lệnh đăng ký khuôn mặt đến ESP32"
+        });
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 
 async function startServer() {
