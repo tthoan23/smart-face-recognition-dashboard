@@ -40,9 +40,7 @@ export default function PersonsView() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name{/*: formName.trim(),
-                    imagePath: formImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&auto=format",
-                    faceVector: "[]" // Fake data tạm cho faceVector*/}
+                    name
                 })
             });
             const newPerson = await response.json();
