@@ -33,20 +33,24 @@ export default function PersonsView() {
     const close = () => setModal({ type: "none" })
 
     const handleAdd = async () => {
-        if (!formName.trim()) return
+        const name = formName.trim(); if (!name) { alert("Vui lòng nhập tên người quen!"); return; }
 
         try {
             const response = await fetch(`${API_URL}/api/persons`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name: formName.trim(),
+                    name{/*: formName.trim(),
                     imagePath: formImage || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&auto=format",
-                    faceVector: "[]" // Fake data tạm cho faceVector
+                    faceVector: "[]" // Fake data tạm cho faceVector*/}
                 })
             });
             const newPerson = await response.json();
-            setPersons([...persons, newPerson]); // Cập nhật lại UI
+        {/*setPersons([...persons, newPerson]); // Cập nhật lại UI*/}
+            if (!response.ok) 
+                { throw new Error( newPerson.error || "Không thể gửi yêu cầu đăng ký khuôn mặt" ); } 
+            console.log( "Đã gửi yêu cầu đăng ký khuôn mặt:", newPerson ); 
+            alert( `Đã gửi yêu cầu đăng ký khuôn mặt cho "${name}".\n\nVui lòng nhìn vào camera để ESP32 quét khuôn mặt.` );
             close();
         } catch (err) {
             console.error("Lỗi thêm người quen: ", err);
@@ -64,8 +68,8 @@ export default function PersonsView() {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name: formName.trim(),
-                    imagePath: formImage || targetPerson.image,
+                    name: formName.trim()
+                    {/*imagePath: formImage || targetPerson.image,*/}
                 }),
             });
 
