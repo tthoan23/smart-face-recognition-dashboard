@@ -67,7 +67,6 @@ export default function PersonsView() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     name: formName.trim()
-                    {/*imagePath: formImage || targetPerson.image,*/}
                 }),
             });
 
