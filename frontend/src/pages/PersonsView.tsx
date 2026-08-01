@@ -171,8 +171,8 @@ export default function PersonsView() {
                         <div><label style={{ fontSize: 13, fontWeight: 500, color: "#374151", display: "block", marginBottom: 6 }}>Họ và tên *</label>
                             <input value={formName} onChange={e => setFormName(e.target.value)} placeholder="Nhập họ và tên"
                                 style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #e2e8f0", fontSize: 14, outline: "none", background: "#f8fafc" }} /></div>
-                        <div><label style={{ fontSize: 13, fontWeight: 500, color: "#374151", display: "block", marginBottom: 6 }}>Ảnh chân dung</label>
-                            <ImageUpload preview={formImage} onChange={setFormImage} /></div>
+                        {/*<div><label style={{ fontSize: 13, fontWeight: 500, color: "#374151", display: "block", marginBottom: 6 }}>Ảnh chân dung</label>
+                            <ImageUpload preview={formImage} onChange={setFormImage} /></div>*/}
                         <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", paddingTop: 8 }}>
                             <button onClick={close} style={{ padding: "9px 20px", borderRadius: 8, border: "1px solid #e2e8f0", background: "#fff", fontSize: 13.5, fontWeight: 500, cursor: "pointer", color: "#64748b" }}>Hủy</button>
                             <button onClick={handleAdd} style={{ padding: "9px 20px", borderRadius: 8, border: "none", background: "#2563eb", color: "#fff", fontSize: 13.5, fontWeight: 600, cursor: "pointer" }}>Lưu</button>
