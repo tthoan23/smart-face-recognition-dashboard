@@ -109,9 +109,11 @@ app.get('/api/persons', async (req, res) => {
 app.post('/api/persons', async (req, res) => {
     const { name, faceVector, imagePath } = req.body;
 
+    if (!name || !name.trim()) { return res.status(400).json({ error: "Tên người quen không được để trống" }); }
+
     try {
         // Nghiệp vụ: Tự động sinh ID dựa trên tổng số bản ghi (Ví dụ: P1, P2...)
-        const idResult = await pool.query(`
+        {/*const idResult = await pool.query(`
           SELECT COALESCE(
             MAX(CAST(SUBSTRING(ID FROM 2) AS INTEGER)),
             0
@@ -125,11 +127,11 @@ app.post('/api/persons', async (req, res) => {
             `INSERT INTO NguoiQuen (ID, Name, FaceVector, ImagePath) 
        VALUES ($1, $2, $3, $4) RETURNING ID AS "personId", Name AS name, ImagePath AS image`,
             [newId, name, faceVector, imagePath]
-        );
+        );*/}
 
         await publishEnrollFace(name.trim());
 
-        res.json(rows[0]);
+        console.log( `Enroll face command sent via MQTT for: ${name.trim()}` ); res.status(202).json({ success: true, message: "Đã gửi yêu cầu đăng ký khuôn mặt tới ESP32", name: name.trim() });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
