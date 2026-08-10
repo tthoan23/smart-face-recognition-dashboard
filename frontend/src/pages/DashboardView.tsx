@@ -42,17 +42,17 @@ export default function DashboardView({ logs, personsCount = 0 }: DashboardViewP
             {/* Bảng Sự kiện gần đây */}
             <div style={{ background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0" }}>
                 <div style={{ padding: "16px 20px", borderBottom: "1px solid #e2e8f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: "#0f172a" }}>Sự kiện gần đây</h2>
-                    <span style={{ fontSize: 12, color: "#94a3b8" }}>{new Date().toLocaleDateString("vi-VN")}</span>
+                    <h2 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: "#0f172a" }}>Sự kiện hôm nay</h2>
+                    <span style={{ fontSize: 12, color: "#94a3b8" }}>{today.toLocaleDateString("vi-VN")}</span>
                 </div>
 
-                {safeLogs.length === 0 ? (
+                {todayLogs.length === 0 ? (
                     <div style={{ padding: 40, textAlign: "center", color: "#94a3b8" }}>
                         Chưa có sự kiện ra vào nào được ghi nhận trong cơ sở dữ liệu.
                     </div>
                 ) : (
-                    safeLogs.slice(0, 5).map((log, i) => (
-                        <div key={log.id} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 20px", borderBottom: i < 4 ? "1px solid #f1f5f9" : "none" }}>
+                    todayLogs.slice(0, 5).map((log, i) => (
+                        <div key={log.id} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 20px", borderBottom: i < Math.min(todayLogs.length, 5) - 1 ? "1px solid #f1f5f9" : "none" }}>
                             <img
                                 src={log.image || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop&auto=format"}
                                 alt={log.personName || "Khách"}
