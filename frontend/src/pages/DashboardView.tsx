@@ -12,10 +12,22 @@ export default function DashboardView({ logs, personsCount = 0 }: DashboardViewP
     const safeLogs = Array.isArray(logs) ? logs : [];
 
     // Lọc các số liệu thống kê
-    const known = safeLogs.filter(l => (l.eventType as string) === "known" || (l.eventType as string) === "Người quen mở cửa" || (l.eventType as string) === "1. Người quen mở cửa (Cười Liveness đạt)").length;
-    const unknown = safeLogs.filter(l => (l.eventType as string) === "unknown" || (l.eventType as string) === "Khách lạ tương tác").length;
-    const spoofing = safeLogs.filter(l => (l.eventType as string) === "spoofing" || (l.eventType as string) === "Cảnh báo giả mạo").length;
+    //const known = safeLogs.filter(l => (l.eventType as string) === "known" || (l.eventType as string) === "Người quen mở cửa" || (l.eventType as string) === "1. Người quen mở cửa (Cười Liveness đạt)").length;
+    //const unknown = safeLogs.filter(l => (l.eventType as string) === "unknown" || (l.eventType as string) === "Khách lạ tương tác").length;
+    //const spoofing = safeLogs.filter(l => (l.eventType as string) === "spoofing" || (l.eventType as string) === "Cảnh báo giả mạo").length;
 
+    const today = new Date(); const startOfToday = new Date( today.getFullYear(), today.getMonth(), today.getDate() ); 
+    const startOfTomorrow = new Date( today.getFullYear(), today.getMonth(), today.getDate() + 1 ); 
+    // Chỉ giữ lại các event xảy ra trong ngày hôm nay 
+    const todayLogs = safeLogs.filter((log) => { 
+        if (!log.timestamp) return false; 
+        const logDate = new Date(log.timestamp); 
+        return logDate >= startOfToday && logDate < startOfTomorrow; 
+    }); // Lọc các số liệu thống kê trong ngày hôm nay 
+    const known = todayLogs.filter( (l) => (l.eventType as string) === "known" || (l.eventType as string) === "Người quen mở cửa" || (l.eventType as string) === "1. Người quen mở cửa (Cười Liveness đạt)" ).length; 
+    const unknown = todayLogs.filter( (l) => (l.eventType as string) === "unknown" || (l.eventType as string) === "Khách lạ tương tác" ).length; 
+    const spoofing = todayLogs.filter( (l) => (l.eventType as string) === "spoofing" || (l.eventType as string) === "Cảnh báo giả mạo" ).length;
+    
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
             {/* 4 Thẻ Thống kê */}
